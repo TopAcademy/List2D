@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="List2D.h" />
+    <ClInclude Include="ListElement.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
