@@ -18,7 +18,10 @@ public:
 	ListElement* go_to_first();
 	void print_list();
 	void add_to_end(int val);
+	void add_to_start(int val);
 	void add_after(int val);
+	void add_before(int val);
+	ListElement* find(int what_to_find);
 	// Test methods
 	int count_elements();
 };
@@ -82,6 +85,17 @@ void List2D::add_to_end(int val)
 	p_current = created_element;
 }
 
+
+// Add new element to the start of chain
+void List2D::add_to_start(int val)
+{
+	go_to_first();
+	ListElement* created_element = new ListElement(val, nullptr, p_current);
+	if (p_current != nullptr) p_current->prev = created_element;
+	p_current = created_element;
+}
+
+
 // Add new element after the current
 void List2D::add_after(int val)
 {
@@ -101,6 +115,24 @@ void List2D::add_after(int val)
 	p_current = created_element;
 }
 
+// Add new element after the current
+void List2D::add_before(int val)
+{
+	// If current is first or the list is empty
+	// then we just have to add to the start
+	if ((p_current == nullptr) || (p_current->prev == nullptr)) {
+		this->add_to_start(val);
+		return;
+	}
+	// If current have prev element(s)
+	// then we need to rebase pointers
+	ListElement* created_element = new ListElement(val, nullptr, p_current);
+	created_element->prev = p_current->prev;
+	p_current->prev = created_element;
+	(created_element->prev)->next = created_element;
+	p_current = created_element;
+}
+
 
 // Count of elements in the list
 int List2D::count_elements()
@@ -115,4 +147,20 @@ int List2D::count_elements()
 	}
 	p_current = temp_current;
 	return n;
+}
+
+
+// Find element with given value and return the pointer
+ListElement* List2D::find(int what_to_find)
+{
+	if (this->go_to_first() == nullptr) return nullptr;
+	ListElement* found_ptr = nullptr;
+	// Find algorithm
+	do {
+		if (p_current->value == what_to_find) {
+			found_ptr = p_current;
+			break;
+		}
+	} while ( (p_current->next) ? (p_current = p_current->next) : false);
+	return found_ptr;
 }
